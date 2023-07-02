@@ -1,25 +1,24 @@
-import { NextApiRequest } from 'next';
 import { NextResponse } from 'next/server';
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(
+  'sk_test_51NNUBQF6ve8FNl5RxEKCceFWSU2t17C7rmBzUuDfmB5c6qPSdrVEpAOv1ya5BwpJqqvVBRRkL4EzFCnFh66IdGc100Xnd2C7RH'
+);
 
-interface createCustomer extends NextApiRequest {
-  body: {
-    name: string;
-    email: string;
-    phoneNumber: string;
-    description: string;
-    address: string;
-    city: string;
-    country: string;
-  };
-}
+export async function POST(request: Request) {
+  const requestBody = await request.json();
+  const {
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    description,
+    address,
+    city,
+    country,
+  } = requestBody;
 
-export async function POST(request: createCustomer) {
-  const { name, email, phoneNumber, description, address, city, country } =
-    request.body;
   const customer = await stripe.customers.create({
-    name,
+    name: firstName + ' ' + lastName,
     email,
     phone: phoneNumber,
     description,
